@@ -4,79 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kebutuhan Rename dan zipper</title>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <style>
-      body {
-        font-family: sans-serif;
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-        line-height: 1.6;
-      }
-      .container {
-        border: 1px solid #ccc;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      h2 {
-        text-align: center;
-        color: #333;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-      select,
-      input,
-      button {
-        width: 100%;
-        margin-bottom: 15px;
-        padding: 10px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      button {
-        background-color: #28a745;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-        transition: background 0.3s;
-      }
-      button:hover {
-        background-color: #218838;
-      }
-      button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-      }
-      #status {
-        margin-top: 10px;
-        font-weight: bold;
-        color: #007bff;
-        text-align: center;
-      }
-      .file-list {
-        margin-top: 15px;
-        font-size: 0.9em;
-        color: #555;
-        border-top: 1px solid #eee;
-        padding-top: 10px;
-        max-height: 300px;
-        overflow-y: auto;
-      }
-      ul {
-        padding-left: 20px;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
@@ -95,7 +26,16 @@
         <option value="E">Endfield (E1, E2...)</option>
       </select>
 
-      <label for="videoInput">2. Pilih Video (Bisa banyak sekaligus):</label>
+      <label for="startNumber">2. Nomor Awal (Opsional, Default: 1):</label>
+      <input
+        type="number"
+        id="startNumber"
+        value="1"
+        min="1"
+        placeholder="Masukkan angka awal, misal: 11"
+      />
+
+      <label for="videoInput">3. Pilih Video (Bisa banyak sekaligus):</label>
       <input type="file" id="videoInput" multiple accept="video/*" />
 
       <button id="processBtn" onclick="confirmProcess()">
@@ -106,93 +46,6 @@
       <div id="preview" class="file-list"></div>
     </div>
 
-    <script>
-      function confirmProcess() {
-        const fileInput = document.getElementById("videoInput");
-        if (fileInput.files.length === 0) {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Tolong pilih video terlebih dahulu!",
-          });
-          return;
-        }
-        Swal.fire({
-          title: "Apakah anda yakin?",
-          text: `Anda akan memproses ${fileInput.files.length} video menjadi file ZIP.`,
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonColor: "#28a745",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Ya, Proses!",
-          cancelButtonText: "Batal",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            executeProcess();
-          }
-        });
-      }
-
-      function executeProcess() {
-        const fileInput = document.getElementById("videoInput");
-        const categorySelect = document.getElementById("category");
-        const statusDiv = document.getElementById("status");
-        const previewDiv = document.getElementById("preview");
-        const processBtn = document.getElementById("processBtn");
-        processBtn.disabled = true;
-        processBtn.innerText = "⏳ Sedang Memproses...";
-        statusDiv.innerText = "Sedang mengompres data... mohon tunggu.";
-        previewDiv.innerHTML = "";
-
-        const files = fileInput.files;
-        const prefix = categorySelect.value;
-        const zip = new JSZip();
-
-        let listHTML = "<strong>Preview Nama Baru:</strong><br/><ul>";
-
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const extension = file.name.slice(
-            ((file.name.lastIndexOf(".") - 1) >>> 0) + 2
-          );
-          const newName = `${prefix}${i + 1}.${extension}`;
-
-          zip.file(newName, file);
-          listHTML += `<li>${file.name} ➡️ <strong>${newName}</strong></li>`;
-        }
-        listHTML += "</ul>";
-        previewDiv.innerHTML = listHTML;
-
-        const zipFilename = `${files.length}_videos.zip`;
-
-        zip
-          .generateAsync({ type: "blob" })
-          .then(function (content) {
-            saveAs(content, zipFilename);
-
-            statusDiv.innerText = `✅ Berhasil! File "${zipFilename}" sedang didownload.`;
-            processBtn.disabled = false;
-            processBtn.innerText = "🚀 Proses & Download ZIP";
-            Swal.fire({
-              icon: "success",
-              title: "Selesai!",
-              text: "File ZIP berhasil dibuat dan didownload.",
-              timer: 2000,
-              showConfirmButton: false,
-            });
-          })
-          .catch(function (err) {
-            statusDiv.innerText = "❌ Terjadi kesalahan: " + err;
-            processBtn.disabled = false;
-            processBtn.innerText = "Coba Lagi";
-
-            Swal.fire({
-              icon: "error",
-              title: "Gagal",
-              text: "Terjadi kesalahan saat membuat ZIP.",
-            });
-          });
-      }
-    </script>
+    <script src="process.js"></script>
   </body>
 </html>

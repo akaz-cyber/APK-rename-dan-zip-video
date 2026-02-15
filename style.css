@@ -1,0 +1,66 @@
+body {
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  line-height: 1.6;
+}
+.container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+h2 {
+  text-align: center;
+  color: #333;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+select,
+input,
+button {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+button:hover {
+  background-color: #218838;
+}
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+#status {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #007bff;
+  text-align: center;
+}
+.file-list {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #555;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+ul {
+  padding-left: 20px;
+}
